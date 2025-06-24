@@ -5,7 +5,7 @@ import starlight from '@astrojs/starlight';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://documentation.necrozmalabs.com',
-	base: '/',
+	base: '',
 	integrations: [
 		starlight({
 			title: 'Necrozma Open Research Laboratory',
@@ -19,4 +19,5 @@ export default defineConfig({
 			],
 		}),
 	],
+	output: "static"
 });
