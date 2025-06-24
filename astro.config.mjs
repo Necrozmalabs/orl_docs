@@ -5,7 +5,7 @@ import starlight from '@astrojs/starlight';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://necrozmalabs.github.io/orl_docs',
-	base: '/',
+	base: '/orl_docs',
 	integrations: [
 		starlight({
 			title: 'Necrozma Open Research Laboratory',
