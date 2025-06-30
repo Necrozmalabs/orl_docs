@@ -3,8 +3,6 @@ title: Getting Started
 description: A comprehensive guide to using Necrozma Open Research Laboratory for experiments and workflows.
 ---
 
-
-
 Welcome to the **Necrozma Open Research Laboratory**, an advanced open-source simulation platform where researchers, students, and enthusiasts can conduct experiments using highly accurate virtual lab components. Whether you’re exploring physics, electronics, or quantum systems, Necrozma provides a powerful and intuitive virtual space to test, learn, and innovate.
 
 This guide will walk you through everything you need to know to get started, from understanding the platform’s core features to creating experiments and workflows, managing your credits, and following best practices.
