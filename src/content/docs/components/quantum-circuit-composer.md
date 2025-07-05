@@ -1,6 +1,6 @@
 ---
 title: Quantum Circuit Composer
-description: Quantum Circuit 
+description: Quantum Circuit Composer used to crease and visualize quantum circuits.
 ---
 
 The **Quantum Circuit Composer** is an interactive, visual tool designed to allow users to create, edit, and simulate quantum circuits using IBM’s open-source framework **Qiskit**. It provides an intuitive interface for both beginners and advanced users to experiment with quantum gates, observe the resulting circuit behavior, and understand quantum computation concepts through real-time feedback and visualizations.
