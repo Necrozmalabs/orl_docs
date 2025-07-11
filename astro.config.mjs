@@ -23,6 +23,10 @@ export default defineConfig({
 					autogenerate: { directory: 'components' },
 				},
 				{
+					label: 'Tutorials',
+					autogenerate: { directory: 'tutorials' },
+				},
+				{
 					label:'Report an Issue',
 					link:'/report-issue'
 				}

@@ -34,7 +34,7 @@ Your credit amount is automatically applied based on your selected institution a
 
 #### 1. **Log into your account**
 - Visit your [Profile Page](https://openresearchlaboratory.necrozmalabs.com/profile).
-- Make sure you're signed in. #aside
+- Make sure you're signed in.
 
 #### 2. **Scroll to “Partner Institutions” section**
 - It’s located below your profile and social information.
