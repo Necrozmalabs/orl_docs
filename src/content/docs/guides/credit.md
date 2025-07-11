@@ -11,7 +11,7 @@ Credits act as virtual tokens that are consumed whenever a user runs a simulatio
 
 ### Free Credits for New Users
 
-Every new user who signs up on the platform receives **100 free credits**.
+Every new user who signs up on the platform receives **50 free credits as the part of Open Research Laboratory Early Adopter Program**.
 
 This is more than enough to:
 - Run multiple experiments
@@ -75,4 +75,4 @@ Are you part of a university or research lab? We offer bulk credit packages and 
 - **Request credits** if you run out
 - No cost for signing up, experimenting, or exploring
 
-> Need help? Contact support.
+> Need help? [Contact support](/report-issue)

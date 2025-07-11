@@ -130,3 +130,5 @@ Necrozma operates on a credit-based model to ensure fair usage and sustainabilit
 * Re-run saved experiments without reconfiguring (but still costs credits).
 
 **You can top up credits in the billing section. Discounts available for verified students and institutions.**
+
+If you face any probem feel free to [Contact support](/report-issue)

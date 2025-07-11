@@ -11,7 +11,7 @@ export default defineConfig({
 	base: '',
 	integrations: [
 		starlight({
-			title: 'Necrozma Open Research Laboratory',
+			title: 'Open Research Laboratory',
 			social: [{ icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/necrozmalabs' }],
 			sidebar: [
 				{
@@ -22,6 +22,10 @@ export default defineConfig({
 					label: 'Components',
 					autogenerate: { directory: 'components' },
 				},
+				{
+					label:'Report an Issue',
+					link:'/report-issue'
+				}
 				
 			],
 		}),
