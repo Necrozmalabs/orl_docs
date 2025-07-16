@@ -1,128 +1,205 @@
+
 ---
-title: Creating a Quantum Key Distribution
-description: In this guide, we’ll walk through how to build a Quantum Key Distribution using open research laboratory.
+title: Quantum Key Distribution 
+description: Build and simulate customizable QKD protocols with defined parameters, channel noise, and key measurement.
 ---
 
-In this guide, we’ll walk through how to simulate a **Continuous Variable (CV) Quantum Key Distribution** 
 
+This tutorial guides you through building and simulating a **Quantum Key Distribution (QKD)** protocol in the Necrozma Quantum Lab. You will use various modular components to customize the protocol, evaluate its performance, and simulate quantum network transmission.
 
-### What is CV-QKD?
+> All components in this tutorial have a standard credit cost of **8**.
 
-Continuous-variable QKD uses **quantum states of light** (like squeezed or coherent states) sent over a lossy fiber channel to generate secure keys between **Alice** and **Bob**. An **eavesdropper (Eve)** may attempt to intercept, and the system estimates security using **QBER**.
-
-
-### Core Concepts
-
-#### Laser Power to Alpha
-
-We use this formula to convert dBm power to a quantum amplitude:
-
-$$
-\text{Power (watts)} = 10^{\frac{\text{dBm} - 30}{10}}, \quad \alpha = \sqrt{\text{Power} \times 10^6}
-$$
-
-#### Channel Loss (Transmissivity)
-
-Loss due to fiber attenuation:
-
-$$
-\eta = 10^{\frac{-\alpha_{\text{db/km}} \cdot \text{Length}_{\text{km}}}{10}}
-$$
+The workflow you'll build simulates a **polarization-based QKD system** with:
+- Signal attenuation
+- Weak coherent pulses
+- Quantum state encoding
+- Channel noise
+- Detection at the receiver
+- Final key storage
 
 ---
 
-### Configuration
+## Objective
 
-Here’s a working configuration for basic QKD with eavesdropping enabled:
+To simulate a basic QKD protocol with realistic noise, attenuation, and encoding mechanisms using the following configuration:
 
 ```json
 {
-  "laser_power_dbm": -20,
-  "laser_phase": 0.0,
-  "squeeze_r": 0.0,
-  "phase_shift_phi": 0.0,
-  "fiber_length_km": 10,
-  "alpha_db_per_km": 0.2,
-  "bs_phi": 0.0,
-  "eavesdrop": true,
-  "eve_bs_ratio": 0.5,
-  "detector": "homodyne",
-  "homodyne_angle": 0.0,
-  "fock_cutoff": 5,
-  "shots": 100,
-  "enable_reconciliation": true,
-  "enable_privacy_amplification": true
+  "Attenuator": { "attenuation": 90 },
+  "Bob Measurement": { "basis": "Z", "detector_efficiency": 0.9 },
+  "Quantum Channel": { "loss_db": 3, "noise_model": "depolarizing" },
+  "Weak Coherent Pulse Laser": {
+    "wavelength": 1550,
+    "pulse_width": 55,
+    "average_photon_number": 0.4,
+    "pulse_repetition_rate": 50
+  },
+  "Polarization Encoder (Alice)": {
+    "hwp_angle": 22.5,
+    "qwp_angle": 45,
+    "motorized_control": "Manual"
+  }
 }
 ````
 
 ---
 
-#### Parameter Breakdown
+## Workflow Components & Configuration
 
-| Parameter                      | Description                                                |
-| ------------------------------ | ---------------------------------------------------------- |
-| `laser_power_dbm`              | Weak coherent state power. e.g., `-20 dBm` = 10 μW         |
-| `laser_phase`                  | Phase shift to encode `0` or `1`                           |
-| `squeeze_r`                    | Amplitude of squeezing. Set `> 0` for squeezed state QKD   |
-| `phase_shift_phi`              | Optional phase shift after squeezing                       |
-| `fiber_length_km`              | Channel length (optical fiber)                             |
-| `alpha_db_per_km`              | Fiber attenuation (typically 0.2 dB/km)                    |
-| `bs_phi`                       | Phase shift at the beam splitter                           |
-| `eavesdrop`                    | Enable Eve to tap signal                                   |
-| `eve_bs_ratio`                 | Eve's beam splitter ratio (0.5 = 50% interception)         |
-| `detector`                     | `"homodyne"`, `"heterodyne"`, or `"fock"`                  |
-| `homodyne_angle`               | Quadrature angle to measure (e.g., `0` = `x`, `π/2` = `p`) |
-| `shots`                        | Number of simulated bits                                   |
-| `enable_reconciliation`        | Enables conversion of Bob’s values into classical bits     |
-| `enable_privacy_amplification` | Applies post-processing to enhance secrecy                 |
+### 1. **Weak Coherent Pulse Laser**
 
----
+This laser emits low-intensity light pulses suitable for QKD. The pulse intensity is governed by the **average photon number** μ.
 
-### Steps to create QKD
+#### Parameters:
 
-Go to Open Research Laboratory 
+* Wavelength (λ): **1550 nm**
+* Pulse Width (τ): **55 ps**
+* Average Photon Number (μ): **0.4**
+* Pulse Repetition Rate: **50 MHz**
 
-Create a new workflow with the given components 
-
-![image](https://private-user-images.githubusercontent.com/85983956/465171585-67c65713-7813-40a1-95dc-313466c9ec92.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTIyMjI4ODcsIm5iZiI6MTc1MjIyMjU4NywicGF0aCI6Ii84NTk4Mzk1Ni80NjUxNzE1ODUtNjdjNjU3MTMtNzgxMy00MGExLTk1ZGMtMzEzNDY2YzllYzkyLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA3MTElMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNzExVDA4Mjk0N1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTRmMGI5OTFkNzM0ZTc4MDZhMTQ2YjgzYWQ4Mjg1MWVjYzhjMGQ3OGM1ZGM4ZWRiYTczNDk5YzdhNWEyYmQ1MDcmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.cBCRT_jR6rBec6Goev-RRBFxCIHdSW6HvyzksiBpX88)
-
-Enter the value as given in the [Configuration](#configuration)
-
-On the QKD control unit click run.
-
-
-### Output Breakdown
-
-* `alice_bits`: The random key generated by Alice
-* `bob_bits`: The decoded key at Bob’s side
-* `qber`: Quantum Bit Error Rate
-
-$$
-\text{QBER} = \frac{\text{Number of mismatches}}{\text{Total bits}}
-$$
-
-* `image`: Histogram of Bob's measurement values
-* `eve_measurements`: (if enabled) Eve’s intercepted quadrature values
+> **Photon emission follows a Poisson distribution:**
+>
+> $P(n) = \frac{μ^n e^{-μ}}{n!}$
+> where $P(n)$ is the probability of emitting *n* photons per pulse.
 
 ---
 
-### Our Output
+### 2. **Attenuator**
 
-**qber:** 0.56
+Controls signal intensity to limit multiphoton events and simulate fiber loss.
 
-![QKD Histogram](https://private-user-images.githubusercontent.com/85983956/465173612-2d43c4a5-a657-4791-8ed0-2a9dd341bc69.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTIyMjI3ODIsIm5iZiI6MTc1MjIyMjQ4MiwicGF0aCI6Ii84NTk4Mzk1Ni80NjUxNzM2MTItMmQ0M2M0YTUtYTY1Ny00NzkxLThlZDAtMmE5ZGQzNDFiYzY5LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA3MTElMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNzExVDA4MjgwMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWEzMTU2NmViMTZiOTRlM2M1ZWU2OTc4YzJhMjA1YWYzMjdmZGI1MTM2NmQ2YTI2MmMyN2Y1YjdlMmE1Njc4MjUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.tgUXWQY2im9fTl7i0nprG_3_0vNyKqWEdXwqTAgy9n4)
+#### Parameters:
 
-This histogram shows two main peaks — one for logical `0`, one for `1`. Bob applies a sign threshold to decide each bit.
+* Attenuation: **90 dB**
 
----
+> **Attenuated Power Equation:**
+>
+> $P_{\text{out}} = P_{\text{in}} \cdot 10^{-\frac{\text{Attenuation (dB)}}{10}}$
 
-### Security Tips
-
-* Use `-20 dBm` or lower for real-world laser simulation
-* Add squeezing (`squeeze_r > 0`) to test squeezed-state protocols
-* Expect QBER < 11% for secure key generation
-* Turn on both `reconciliation` and `privacy_amplification` for final key
+This results in a very low output photon rate suitable for QKD.
 
 ---
 
-Made with ❤️ by **Open Research Laboratory**
+### 3. **Polarization Encoder (Alice)**
+
+Applies waveplates to encode qubits into polarization states for transmission.
+
+#### Parameters:
+
+* Half-Wave Plate (HWP) angle: **22.5°**
+* Quarter-Wave Plate (QWP) angle: **45°**
+* Control: **Manual**
+
+> These angles allow encoding into superposition states, such as:
+>
+> $|+\rangle = \frac{1}{\sqrt{2}}(|H\rangle + |V\rangle)$
+
+---
+
+### 4. **Quantum Channel**
+
+Simulates optical fiber with configurable loss and noise.
+
+#### Parameters:
+
+* Loss: **3 dB**
+* Noise Model: **Depolarizing**
+
+> **Depolarizing Noise Model:**
+>
+> $ρ \rightarrow (1 - p)ρ + \frac{p}{3}(XρX + YρY + ZρZ)$
+> where $p$ is the depolarizing probability related to channel quality.
+
+---
+
+### 5. **Bob Measurement**
+
+Measures the incoming qubits in a specific basis.
+
+#### Parameters:
+
+* Measurement Basis: **Z-basis** (|0⟩, |1⟩)
+* Detector Efficiency: **90%**
+
+> Realistic detectors miss some photons.
+> Effective detection rate =
+> $R = η \cdot T \cdot μ \cdot f$
+> where:
+>
+> * $η$: detector efficiency
+> * $T$: channel transmission
+> * $μ$: average photon number
+> * $f$: pulse repetition rate
+
+---
+
+### 6. **Quantum Key Storage**
+
+Stores the final key after post-processing (reconciliation + privacy amplification).
+
+This component finalizes the secure key and prepares it for usage or export.
+
+---
+
+## Step-by-Step Instructions
+
+### Step 1: Launch the Quantum Lab
+
+Open the **Quantum Lab** from the Necrozma dashboard.
+
+### Step 2: Create a New Experiment
+
+Click **"+ New Experiment"** and select the **Quantum Communication** environment.
+
+### Step 3: Add Components
+
+Manually or with **View AI**, add the following components in this order:
+
+* Weak Coherent Pulse Laser
+* Attenuator
+* Polarization Encoder (Alice)
+* Quantum Channel
+* Bob Measurement
+* Quantum Key Storage
+
+> You can ask View AI:
+
+### Step 4: Configure Parameters
+
+Input the values listed above into each component’s settings panel.
+
+### Step 5: Provide Research Description
+
+For best accuracy with View AI, enter a research description like:
+
+> *“Simulating BB84 with a depolarizing channel and single-photon detection in Z-basis. Photon number = 0.4, 3 dB loss. Target: evaluate raw key rate.”*
+
+### Step 6: Run the Simulation
+
+Start the simulation. Credits will be deducted per component. Output graphs, detection stats, and key generation rates will be shown.
+
+---
+
+## Expected Output
+
+* Polarization histograms at Bob’s detector
+* Raw key generation rate and error rate
+* Photon loss rate over the channel
+* Final key bits stored in **Quantum Key Storage**
+
+---
+
+## Tips
+
+* Use **Decoy States** if you're testing against PNS attacks.
+* You can chain workflows to simulate full QKD protocols with **error correction** and **privacy amplification**.
+* Save and export keys for further cryptographic processing.
+
+---
+
+## Conclusion
+
+This tutorial covered how to build a working QKD system using configurable components in Necrozma Quantum Lab. With precise values and customizable parameters, you can simulate realistic quantum communication protocols and evaluate their performance under various physical conditions.
+
+Need help? Visit the [support center](/report-issue)
+

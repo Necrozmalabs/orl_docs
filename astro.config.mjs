@@ -19,8 +19,8 @@ export default defineConfig({
 					autogenerate: { directory: 'guides' },
 				},
 				{
-					label: 'Components',
-					autogenerate: { directory: 'components' },
+					label: 'Labs',
+					autogenerate: { directory: 'labs' },
 				},
 				{
 					label: 'Tutorials',
