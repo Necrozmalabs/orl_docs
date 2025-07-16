@@ -1,4 +1,3 @@
-
 ---
 title: Quantum Key Distribution 
 description: Build and simulate customizable QKD protocols with defined parameters, channel noise, and key measurement.
