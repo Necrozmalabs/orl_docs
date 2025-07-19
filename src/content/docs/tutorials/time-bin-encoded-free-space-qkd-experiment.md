@@ -4,7 +4,7 @@ description: Time-bin encoding quantum key distribution in free-space horizontal
 ---
 
 
-### Background & Motivation
+### Background
 
 Quantum Key Distribution (QKD) enables **unbreakable encryption** by relying on the principles of quantum mechanics. While **fiber-based QKD** is already in advanced deployment in metropolitan networks, **free-space QKD** is essential for **satellite-to-ground communication** and for building the **global quantum internet**.
 
@@ -46,25 +46,34 @@ To demonstrate that **time-bin encoding**, typically used in fibers, can be reli
 
 ### Our Experiment – Replication with a Twist
 
-We replicated this setup in a simulated **open research lab** environment, following all experimental design elements from the paper, but under **extremely high attenuation (75 dB)**. This tests the protocol’s robustness in worst-case optical loss conditions—useful for **longer-range** or **deep-space QKD** feasibility studies.
+We replicated this setup in a simulated **open research lab** environment, following all experimental design elements from the paper but with some crazy chnages. This tests the protocol’s robustness in worst-case optical loss conditions—useful for **longer-range** or **deep-space QKD** feasibility studies.
 
 
 #### Experimental Setup Overview
 
-| Component                  | Description                                            |
-|---------------------------|--------------------------------------------------------|
-| **Encoding Scheme**       | Time-bin with 0.8 ns pulse separation                  |
-| **Quantum Signal Laser**  | 1558.98 nm (C-band)                                    |
-| **Synchronization Laser** | 1560.61 nm                                             |
-| **Beacon Laser**          | 1310.10 nm                                             |
-| **Channel**               | Free-space with adaptive optics (DFM beam correction)  |
-| **QKD Protocol**          | BB84 (three-state, one-decoy)                          |
-| **Pulse Frequency**       | 1.2 GHz                                                |
-| **Total Attenuation**     | **75 dB**                                              |
-| **Interference Visibility** | 0.99                                                 |
-| **Detector Efficiency**   | 90%                                                    |
-| **Dark Count Rate**       | 1e-7 per time slot                                     |
-| **Simulation Pulses**     | 10,000,000                                             |
+| **Component**                   | **Description**                                                                  |
+| ------------------------------- | -------------------------------------------------------------------------------- |
+| **Encoding Scheme**             | Time-bin encoding with 800 ps delay between bins using Intensity Modulator (IM)  |
+| **Quantum Signal Laser**        | 1558.98 nm (C-band), Weak Coherent Pulse Laser, 1680 ps pulse width              |
+| **Synchronization Laser**       | 1560.61 nm Clock Laser, 10 MHz (50 m), 145 kHz (500 m)                           |
+| **Beacon Laser**                | 1310.1 nm for beam alignment                                                     |
+| **Pulse Rate**                  | 595 MHz pulse repetition (from laser), modulated at 1.2 GHz via FPGA             |
+| **Time-bin Encoder**            | Intensity Modulator with ±12V driver, 800 ps delay                               |
+| **Attenuation**                 | Fixed (55 dB) + VOA (15 dB) + Beam Splitter (20 dB) = **Total: 90 dB**           |
+| **Photonic Integrated Circuit** | Borosilicate-glass with ion-exchange waveguide, Peltier + PID stabilized         |
+| **Measurement – X basis**       | PIC-based IMZI with 800 ps delay                                                 |
+| **Measurement – Z basis**       | Direct arrival time with SNSPD (efficiency: 90%)                                 |
+| **Detectors**                   | SNSPDs placed after IMZI and Beam Splitter                                       |
+| **Receiver Optics**             | Galilean Telescope (Thorlabs GBE10-C, 10× mag, 35 mm lens)                       |
+| **Beam Alignment**              | Deformable Mirror + PID Controller (controlled using FQD)                        |
+| **Position Detector**           | Thorlabs PDQ30C (FQD) — 0.75 μm resolution, 3.05 mm depth                        |
+| **Signal Coupling**             | Fiber Collimator (Thorlabs C80APC-C), 15 mm beam diameter                        |
+| **Fiber Link**                  | Single Mode Fiber from telescope to detection unit                               |
+| **Synchronization Recovery**    | Photodiode extracts clock from CS via DWDM and HFWDM                             |
+| **Wavelength Filtering**        | DWDM (1558.98 + 1560.61 nm), HFWDM (adds 1310.1 nm)                              |
+| **Clocking Electronics**        | FPGA (1 V output, 1.2 GHz), Driver Circuit (±12V swing to IM)                    |
+| **Time Tagging**                | Time Tagger digitizes detector clicks for analysis                               |
+| **Software Stack**              | Computes: QBER\_X, QBER\_Z, Visibility, Secure Key Rate (block size: 10⁷ pulses) |
 
 ---
 
@@ -95,30 +104,108 @@ These components are created using VIEW AI (Research Assistant in ORL)
 {
   "DWDM": {
     "type": "Dense Wavelength Division Multiplexer",
-    "combined_wavelengths": [
-      1558.98,
-      1560.61
-    ]
+    "combined_wavelengths": [1558.98, 1560.61]
   },
   "HFWDM": {
     "type": "High-Frequency WDM",
-    "combined_wavelengths": [
-      1310.1,
-      1558.98,
-      1560.61
-    ]
+    "combined_wavelengths": [1310.1, 1558.98, 1560.61]
   },
   "CW Laser": {
     "linewidth": "< 100 kHz",
     "wavelength": 1558.98
   },
-  "ALTAZ Mount": {
-    "axes": [
-      "Altitude",
-      "Azimuth"
-    ],
-    "type": "Motorized two-axis",
-    "control": "Remote"
+  "Beacon Laser (BL)": {
+    "type": "CW laser",
+    "wavelength": 1310.1
+  },
+  "Clock Signal Laser (CS)": {
+    "type": "SFP pulsed laser",
+    "wavelength": 1560.61,
+    "frequencies": {
+      "50m_link": "10 MHz",
+      "500m_link": "145 kHz"
+    }
+  },
+  "FPGA Pulse Generator": {
+    "frequency": 1.2,
+    "signal_type": "Electrical drive for IM",
+    "voltage_range": "+/-12V (amplified)"
+  },
+  "Driver Circuit": {
+    "function": "Amplifies FPGA output to Vπ of IM",
+    "input_voltage": 1,
+    "output_voltage": "+/-12V"
+  },
+  "Intensity Modulator": {
+    "type": "Amplitude Modulator",
+    "delay": 800,
+    "material": "Lithium Niobate"
+  },
+  "Fiber Collimator": {
+    "model": "Thorlabs C80APC-C",
+    "diameter_mm": 42.5,
+    "output_beam_diameter_mm": 15
+  },
+  "Galilean Telescope": {
+    "model": "Thorlabs GBE10-C",
+    "magnification": 10,
+    "lens_diameter_mm": 35
+  },
+  "Deformable Mirror (DFM)": {
+    "type": "Tip-Tilt Mirror",
+    "control": "Closed-loop PID",
+    "correction": "Beam wandering"
+  },
+  "Dichroic Mirror (DM)": {
+    "function": "Separates BL from QS/CS"
+  },
+  "Photodiode (PD)": {
+    "function": "Clock extraction from CS",
+    "placement": "After DWDM"
+  },
+  "Time-Tagger Unit": {
+    "input": "Clock from PD",
+    "function": "Assign timestamps to SNSPD clicks"
+  },
+  "Four-Quadrant Detector (FQD)": {
+    "model": "Thorlabs PDQ30C",
+    "depth_mm": 3.05,
+    "function": "Track beacon laser position",
+    "resolution_um": 0.75
+  },
+  "Fixed Attenuator": {
+    "attenuation": "Static; part of 75 dB total attenuation"
+  },
+  "Variable Optical Attenuator": {
+    "attenuation": "Adjustable",
+    "integration": "Fiber-integrated",
+    "max_attenuation": 75
+  },
+  "SNSPD Z-basis": {
+    "type": "Superconducting Nanowire Detector",
+    "connected_to": "First output port of BS"
+  },
+  "SNSPD X-basis": {
+    "type": "Superconducting Nanowire Detector",
+    "connected_to": "IMZI output"
+  },
+  "PIC Interferometer (IMZI)": {
+    "delay_ps": 800,
+    "material": "Borosilicate glass matrix",
+    "integration": "Edge-coupled SMF",
+    "stabilization": "Peltier + PID",
+    "waveguide_tech": "Ion-exchange"
+  },
+  "Fiber Polarization Controller (FPC)": {
+    "function": "Compensate for PIC polarization dependency"
+  },
+  "Beam Splitter (BS)": {
+    "type": "50:50",
+    "function": "Bob’s random basis choice"
+  },
+  "Single Mode Fiber (SMF)": {
+    "function": "Captures aligned light from FS channel",
+    "wavelength": 1550
   },
   "QKD Software": {
     "formula": "Efficient BB84 with one-decoy, finite-key regime",
@@ -129,123 +216,9 @@ These components are created using VIEW AI (Research Assistant in ORL)
       "Visibility",
       "SKR"
     ]
-  },
-  "SNSPD X-basis": {
-    "type": "Superconducting Nanowire Detector",
-    "connected_to": "IMZI output"
-  },
-  "SNSPD Z-basis": {
-    "type": "Superconducting Nanowire Detector",
-    "connected_to": "First output port of BS"
-  },
-  "Driver Circuit": {
-    "function": "Amplifies FPGA output to Vπ of IM",
-    "input_voltage": 1,
-    "output_voltage": "+/-12V"
-  },
-  "PID Controller": {
-    "inputs": [
-      "Proportional",
-      "Integral",
-      "Derivative errors"
-    ],
-    "function": "Real-time correction of DFM alignment"
-  },
-  "Photodiode (PD)": {
-    "function": "Clock extraction from CS",
-    "placement": "After DWDM"
-  },
-  "Fiber Collimator": {
-    "model": "Thorlabs C80APC-C",
-    "diameter_mm": 42.5,
-    "output_beam_diameter_mm": 15
-  },
-  "Fixed Attenuator": {
-    "attenuation": "Static; part of 75 dB total attenuation"
-  },
-  "Time-Tagger Unit": {
-    "input": "Clock from PD",
-    "function": "Assign timestamps to SNSPD clicks"
-  },
-  "Beacon Laser (BL)": {
-    "type": "CW laser",
-    "wavelength": 1310.1
-  },
-  "Beam Splitter (BS)": {
-    "type": "50:50",
-    "function": "Bob’s random basis choice"
-  },
-  "Galilean Telescope": {
-    "model": "Thorlabs GBE10-C",
-    "magnification": 10,
-    "lens_diameter_mm": 35
-  },
-  "Intensity Modulator": {
-    "type": "Amplitude Modulator",
-    "delay": 800,
-    "material": "Lithium Niobate"
-  },
-  "DWDM (Receiver Side)": {
-    "bands": [
-      "C-band"
-    ],
-    "function": "Demultiplex QS and CS"
-  },
-  "Dichroic Mirror (DM)": {
-    "function": "Separates BL from QS/CS"
-  },
-  "FPGA Pulse Generator": {
-    "frequency": 1.2,
-    "signal_type": "Electrical drive for IM",
-    "voltage_range": "+/-12V (amplified)"
-  },
-  "SNSPD Min Interference": {
-    "type": "Superconducting Nanowire Detector",
-    "purpose": "Quick min interference measurement (optional)"
-  },
-  "Clock Signal Laser (CS)": {
-    "type": "SFP pulsed laser",
-    "wavelength": 1560.61,
-    "frequencies": {
-      "50m_link": "10 MHz",
-      "500m_link": "145 kHz"
-    }
-  },
-  "Deformable Mirror (DFM)": {
-    "type": "Tip-Tilt Mirror",
-    "control": "Closed-loop PID",
-    "correction": "Beam wandering"
-  },
-  "Interference Visibility": {
-    "formula": "(max I - min I) / (max I + min I)",
-    "used_to_derive": "QBER_X = (1 - V) / 2"
-  },
-  "Single Mode Fiber (SMF)": {
-    "function": "Captures aligned light from FS channel",
-    "wavelength": 1550
-  },
-  "PIC Interferometer (IMZI)": {
-    "delay_ps": 800,
-    "material": "Borosilicate glass matrix",
-    "integration": "Edge-coupled SMF",
-    "stabilization": "Peltier + PID",
-    "waveguide_tech": "Ion-exchange"
-  },
-  "Variable Optical Attenuator": {
-    "attenuation": "Adjustable",
-    "integration": "Fiber-integrated",
-    "max_attenuation": 75
-  },
-  "Four-Quadrant Detector (FQD)": {
-    "model": "Thorlabs PDQ30C",
-    "depth_mm": 3.05,
-    "function": "Track beacon laser position",
-    "resolution_um": 0.75
-  },
-  "Fiber Polarization Controller (FPC)": {
-    "function": "Compensate for PIC polarization dependency"
   }
 }
+
 
 ```
 
@@ -253,30 +226,50 @@ These components are created using VIEW AI (Research Assistant in ORL)
 
 ```json
 {
-  "qber_z_basis": 0,
-  "qber_x_basis": 0.005,
-  "interference_visibility_equivalent": 0.99,
-  "raw_sifted_key_rate_bps": 240,
-  "secure_key_rate_bps": 229.1,
-  "total_pulses_sent": 10000000,
-  "total_sifted_detections": 2,
-  "sifted_z_basis_count": 1,
-  "sifted_x_basis_count": 1
+  "loss_db": 90.0002,
+  "scintillation_index": 0.0000040727,
+  "QBER_Z": 0.0051,
+  "QBER_X": 0.01,
+  "Visibility": 0.98,
+  "Secure_Key_Rate_per_Block": 0
 }
+
 ```
 
 ### Comparison with Real Experiment
 
-| Metric                  | Our Replicated Setup (75 dB) | Paper (50 m link)    | Paper (500 m link)   |
-| ----------------------- | ---------------------------- | -------------------- | -------------------- |
-| **Attenuation**         | 75 dB                        | 7 dB                 | 16–17 dB             |
-| **Raw Sifted Key Rate** | 240 bps                      | \~800 kbps           | \~40 kbps            |
-| **Secure Key Rate**     | 229.1 bps                    | 709–793 kbps         | 35–40 kbps           |
-| **QBER Z / X**          | 0 / 0.5%                     | Low / Low            | Low / Moderate       |
-| **Visibility**          | 99%                          | 94%                  | 85%                  |
-| **Num. of pulses**      | 10 million                   | Real-time continuous | Real-time continuous |
+| **Metric**              | **Our Setup (90 dB)** | **Paper (50 m link)** | **Paper (500 m link)** |
+| ----------------------- | --------------------- | --------------------- | ---------------------- |
+| **Attenuation**         | **90.0 dB**           | 7 dB                  | 16–17 dB               |
+| **Raw Sifted Key Rate** | Near 0 bps            | \~800 kbps            | \~40 kbps              |
+| **Secure Key Rate**     | **0 bps**             | 709–793 kbps          | 35–40 kbps             |
+| **QBER Z / X**          | 0.51% / 1%            | Low / Low             | Low / Moderate         |
+| **Visibility**          | 98%                   | 94%                   | 85%                    |
+| **Num. of Pulses**      | 10 million            | Continuous            | Continuous             |
 
 ---
+
+### Reason for Discrepancy
+
+Despite decent **QBER** and **visibility**, our secure key rate is **0**. Here's why:
+
+| **Factor**                   | **Impact** |
+|-----------------------------|------------|
+| **Extreme Attenuation (90 dB)** | The photon arrival probability is drastically low, leading to very few detection events. Even with a 10 million pulse simulation, only a tiny fraction of signals are received — which is insufficient to generate sifted keys reliably. |
+| **Sifted Key Size Too Small** | Finite-key security protocols require minimum detection thresholds to apply privacy amplification. With low detections, the statistical fluctuations dominate, nullifying the key rate. |
+| **Block Size Dependency**     | This setup uses a block size of `10⁷` pulses. At high losses, may need longer runtime or higher repetition rate to accumulate enough detections within a block. |
+| **Detector Timing + Dark Counts** | Even with good visibility, timing jitter and background noise (dark counts) at very low signal levels can degrade effective SNR, contributing to 0 SKR. |
+
+---
+
+### Suggestions for Future Improvement
+
+- Reduce attenuation to values (e.g., **< 70 dB**) for good space-based scenarios.
+- Increase the number of simulation pulses beyond **10 million**.
+- Consider using **decoy-state analysis** with **adaptive block sizes** for better SKR estimation under high loss.
+
+---
+
 ### Running This in Open Research Laboratory
 
 To run this QKD experiment within the **Open Research Laboratory**, follow these steps:
@@ -299,12 +292,13 @@ To run this QKD experiment within the **Open Research Laboratory**, follow these
 
 ### Conclusion
 
-Despite the extremely high attenuation of 75 dB, our simulation demonstrated that time-bin encoding in C-band can still yield a non-zero secure key rate, validating the robustness of the BB84 protocol in harsh conditions.
+Despite achieving low QBER and high visibility (indicating clean interference and good alignment), the secure key rate dropped to zero due to extremely high total loss (90 dB). This shows:
 
-This replication experiment confirms the original work’s interoperability promise and further stress-tests the setup in regimes relevant for future deep-space or satellite-based QKD.
-
+- Time-bin encoding can survive under harsh conditions, but:
+- Detection probability becomes too low for a reliable key rate in extreme attenuation scenarios.
+- This aligns with the principles of finite-key security: if too few bits are received, no secret key can be distilled, regardless of quality.
 ---
 
-## 📚 Citation
+### Citation
 
 Cocchi, S., Ribezzo, D., Guarda, G., Centorrino, P., Occhipinti, T., Zavatta, A., & Bacco, D. (2025). *Time-bin encoding quantum key distribution in free-space horizontal links during nighttime and daytime*. arXiv preprint arXiv:2501.08891v1. [https://arxiv.org/abs/2501.08891](https://arxiv.org/abs/2501.08891)
