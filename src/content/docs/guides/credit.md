@@ -32,10 +32,9 @@ Each lab component has an associated **credit cost**, depending on its complexit
 | Intermediate tools (Laser, Function Generator) | 5–7 |
 | Advanced systems (Quantum Simulators, Plasma Emitters) | 8–10 |
 
->  **Experiments** can contain one or multiple components — you'll only be charged for the components you use.
+**Experiments** can contain one or multiple components — you'll only be charged for the components you use.
 
->  **Workflows** may use many components across multiple steps — credits will be consumed based on total usage.
-
+**Workflows** may use many components across multiple steps — credits will be consumed based on total usage.
 
 
 ### How to Use Credits Effectively
@@ -69,7 +68,7 @@ Are you part of a university or research lab? We offer bulk credit packages and 
 
 ### Summary
 
-- **New users** get **100 credits** automatically
+- **New users** get **50 credits** automatically
 - **Each component** costs between **3–10 credits**
 - Use workflows and presets to save credits
 - **Request credits** if you run out
