@@ -3,24 +3,22 @@ title: Getting Started
 description: A comprehensive guide to using Necrozma Open Research Laboratory for experiments and workflows.
 ---
 
-Welcome to the **Open Research Laboratory**, an advanced open-source simulation platform where researchers, students, and enthusiasts can conduct experiments using highly accurate virtual lab components.
+Welcome to the **Open Research Laboratory**, an advanced research platform where researchers, students, and enthusiasts can conduct experiments using highly accurate virtual lab components.
 
-This guide will walk you through everything you need to know to get started, from understanding the platform’s core features to creating experiments and workflows, managing your credits, and following best practices.
+This guide will walk you through everything you need to know to get started, from understanding the platform’s core features to creating experiments, managing your credits, and following best practices.
 
 
-### Key Features:
+## Quick Start (3 Simple Steps)
 
-* Realistic component simulations
-* Drag-and-drop workflow builder
-* Lab-specific environments (Physics Lab, Quantum Lab, etc.)
-* Workflow chaining for advanced experiments
-* Free credits for new users to explore
+1. **Sign up / Log in** – Create your account and receive 50 free credits.
+2. **Create Your First Experiment** – Choose a lab, enter you research details, create components using View AI.
+3. **Run & Observe** – Run your first experiment and analyze the result. You can customize which output values are tracked and visualized by configuring the Research Details.
 
-## Experiments: The Core of Research
+- Note: If you are affiliated with a partner institution, you may be eligible for additional credits. Learn more about institutional benefits [here](/guides/how-to-redeem-partner-perks/).
 
-Experiments are the building blocks of research on Open Research Laboratory. Each experiment is a self-contained setup where you can test your theories, validate models, or learn through simulation.
-
-### What is an Experiment?
+---
+##### Want to Dive deep? okay
+## Experiments
 
 An **experiment** in Open Research Laboratory is a virtual representation of a scientific test. You can include a single component (like a Multimeter) or multiple devices to conduct complex simulations. Think of it like setting up a real lab table — choose your tools and run your test.
 
@@ -34,46 +32,61 @@ An **experiment** in Open Research Laboratory is a virtual representation of a s
 
 2. **Click on "+ Experiment"**
 
-   * You’ll find this option either in your dashboard or in the sidebar.
+   * You’ll find this option in your navigation.
 
 3. **Select Your Lab**
 
    * Choose the lab based on your interest:
 
-     * Physics Lab
      * Quantum Computing Lab
-     * Electronics Lab
-     * More labs are being added regularly!
+     * Physics Lab (in development)
+     * Electronics Lab (in development)
+     * More labs are being added!
 
-4. **Use View Research Assistant**
+4. **Enter Research Details**
 
-      * Generated intelligently** using View AI with plain text prompts
+   * Provide essential information about your experiment, including the objective, expected outputs, and any key parameters. This step is crucial for the View AI Assistant to accurately configure and run your experiment within the Open Research Laboratory.
 
-5. **Assign values**
+      * Think it like giving execution guidelines to your fellow researcher.
 
-   * Give values to the components.
+5. **Use Research Components via View**
+
+      Add components effortlessly using plain text prompts. Just say “add a laser”, and View AI will handle the rest.
 
 6. **Start**
 
    * Credits will be deducted based on selected components.
-   * Results are shown in real-time, and you can interact with the components live.
+   * Results are shown in real-time, but it may take upto 10 mintues depending on your experiment complexity.
 
+## Explore Tutorials
+New to the platform or looking to deepen your understanding?
+Start with these curated tutorials to quickly get up and running:
 
-## Understanding the Credit System
+* Time-bin Encoded Free-space QKD Experiment [View tutorial](/tutorials/time-bin-encoded-free-space-qkd-experiment/)
 
-Necrozma operates on a credit-based model to ensure fair usage and sustainability of simulations.
+* Quantum Key Distribution using B448 Protocol [View tutorial](/tutorials/quantum-key-distribution-using-b448-rotocol/)
 
-#### Key Rules:
+---
 
-* All new users get **50 free credits**.
-* Each component has a **cost between 3 to 10 credits**.
+## More things to share 
+### Why Use Open Research Laboratory?
 
-#### Credit Tips:
+* Run complex, real-world experiments without physical access
+* Avoid costs of high-end lab hardware
+* Explore theoretical models with precision
+* Accelerate research, publication, and validation cycles
 
-* Use preview descriptions before selecting a component.
-* Combine multiple components in one experiment to maximize credit value.
-* Re-run saved experiments without reconfiguring (but still costs credits).
+---
 
-**You can top up credits in the billing section. Discounts available for verified students and institutions.**
+### Frequently Asked Questions
+
+**Q: Can I export my results?**  
+Currently we are working on making export option, As of Now you can copy and paste.
+
+**Q: Can I share experiments with others?**  
+You can copy the workflow id and share it with other. IMPORTANT: they can only view you experiment and cannot make any changes.
+
+**Q: What if I run out of credits?**  
+Visit the profile sections and request for more.
 
 If you face any probem feel free to [Contact support](/report-issue)
