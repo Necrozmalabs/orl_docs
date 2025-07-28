@@ -15,12 +15,16 @@ export default defineConfig({
 			social: [{ icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/necrozmalabs' }],
 			sidebar: [
 				{
-					label: 'Guides',
-					autogenerate: { directory: 'guides' },
+					label:'Welcome',
+					link:'/welcome',
 				},
 				{
 					label: 'Labs',
 					autogenerate: { directory: 'labs' },
+				},
+				{
+					label: 'Guides',
+					autogenerate: { directory: 'guides' },
 				},
 				{
 					label: 'Tutorials',
@@ -29,6 +33,10 @@ export default defineConfig({
 				{
 					label:'Report an Issue',
 					link:'/report-issue'
+				},
+				{
+					label:'Terms and Conditions',
+					link:'/termsandconditions'
 				}
 				
 			],

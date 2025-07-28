@@ -1,89 +1,47 @@
 ---
 title: Quantum Lab
-description: Perform high-accuracy quantum communication and cryptography experiments, supported by View Research Assistant.
+description: Build and simulate quantum error correction codes and hardware-level experiments using natural language with View Research Assistant.
 ---
 
-
-The **Quantum Laboratory** in the Open Research Laboratory enables users to perform high-accuracy experiments in the quantum field. It focuses on **quantum communication** and **quantum cryptography**, allowing researchers and students to create, modify, and test Quantum Key Distribution (QKD) protocols over simulated networks.
+The **Quantum Laboratory** in the Open Research Laboratory empowers users to explore cutting-edge quantum computing concepts. It is designed to support high-accuracy experimentation in **quantum error correction**, **custom code development**, and **quantum hardware integration**.
 
 All components in the Quantum Lab have a **credit cost of 8**.
 
-This lab is fully supported by the **View Research Assistant**, which allows users to interact with the lab via natural language. Simply describe the component or experiment you want to add, and View will handle the rest.
-
+This lab is fully integrated with the **View Research Assistant**, allowing you to build, modify, and simulate quantum experiments simply by describing your intent in natural language. From stabilizer codes to surface codes to hardware-level circuit designs — View handles the technical details.
 
 ---
 
 ### Usage Guide
 
 1. **Enter the Lab:** Open the Quantum Lab through the Open Research Laboratory interface.
-2. **Use View Research Assistant:** Speak or type what you want to build. For example:
-   - *"Add a Weak Coherent Pulse Laser and connect it to a Polarization Encoder."*
-   - *"Simulate a BB84 protocol using a quantum channel and photon detector."*
-3. **Modify Components:** You can update angles, pulse rates, or any parameter by describing your changes to View.
-4. **Run the Experiment:** Once your setup is complete, initiate the simulation. The lab will compute results using high-accuracy quantum simulation libraries.
-5. **Review Output:** Visualizations, measurements, and key generation results will be provided in the output panel.
+2. **Use View Research Assistant:** Describe your experiment or code. For example:
+   - *"Create a 7-qubit Steane code and simulate a phase-flip error."*
+   - *"Connect a quantum chip with three logical qubits using surface code architecture."*
+3. **Modify or Customize:** Update code parameters, gate sequences, noise models, or hardware mappings just by describing the changes to View.
+4. **Run the Simulation:** Initiate the quantum experiment. The lab runs your design using advanced quantum simulators.
+5. **View Results:** Outputs include logical error rates, stabilizer measurements, decoding outcomes, and circuit visualizations.
 
-No manual coding is required to add components or run experiments—just describe your intent, and View will configure the lab accordingly.
+No coding is needed — just describe your idea, and View will convert it into a working simulation.
 
 ---
 
 ### Disclaimer
 
-This laboratory is intended for **educational and experimental purposes only**. While it offers high-accuracy quantum simulations, real-world results may differ depending on your location, device, and environmental conditions.
+This lab is for **educational and research use only**. While the simulations are high-accuracy, they are still virtual and may not exactly match real-world quantum hardware behavior.
 
-By using this lab, you acknowledge that the simulations are **virtual approximations**. Results should be independently validated before applying them in real-world systems. The platform creators are **not responsible** for any consequences resulting from its use.
-
+By using this lab, you acknowledge that all outputs are **simulated approximations**. Real hardware implementations may yield different results. The creators of this platform are **not liable** for any decisions or consequences arising from its usage.
 
 ---
 
-### Available Components
+### Supported Research Areas
 
-> Note: The list of components shown in these tutorials may be outdated, as new components are added regularly.
+> Note: This list may not include the most recent updates, as new components are added regularly.
 
-#### Weak Coherent Pulse Laser  
-Generates weak coherent pulses for quantum key distribution.
+#### Quantum Error Correction (QEC)  
+Design and simulate QEC codes like surface codes, Steane codes, and repetition codes. Analyze their behavior under noise and perform logical error analysis.
 
-#### Entangled Photon Source  
-Produces pairs of entangled photons used in QKD protocols like E91.
+#### Custom Code Creation  
+Develop your own quantum codes from scratch — define logical qubits, stabilizers, and decoding methods with full flexibility.
 
-#### Polarization Encoder (Alice)  
-Encodes polarization states (H/V or ±45°) onto photons based on key bits.
-
-#### Polarization Decoder (Bob)  
-Measures polarization states to recover key bits using a chosen basis.
-
-#### Beam Splitter  
-Splits or combines quantum signals based on polarization or path.
-
-#### Phase Modulator  
-Applies a phase shift to photons, enabling phase-based encoding schemes like DPS-QKD.
-
-#### Quantum Channel  
-Simulates the transmission of quantum states through a lossy or noisy fiber or free-space medium.
-
-#### Classical Authenticated Channel  
-Used to publicly compare basis choices and perform error correction/reconciliation.
-
-#### Single Photon Detector  
-Detects single photons and measures their quantum state.
-
-#### Bell State Analyzer  
-Performs joint measurements in the Bell basis for protocols like entanglement-based QKD.
-
-#### Error Correction Module  
-Implements classical error correction over the raw key.
-
-#### Privacy Amplification Module  
-Compresses the corrected key to remove potential eavesdropper information.
-
-#### Decoy State Generator  
-Randomly varies pulse intensity to detect photon-number splitting attacks.
-
-#### Quantum Random Number Generator  
-Generates truly random bits from quantum processes for key generation.
-
-#### Time-bin Encoder  
-Encodes quantum information using photon arrival times in separate time bins.
-
-#### Quantum Key Storage  
-Stores the generated secure key after reconciliation and amplification.
+#### Code Modification  
+Edit and improve existing QEC frameworks, modify decoding strategies, or adjust gate configurations and error models.
